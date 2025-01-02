@@ -33,7 +33,7 @@ func List(path string, opts ...Option) ([]string, error) {
 			return nil
 		}
 
-		v, err := get.Get(p, nil, get.Expr(o.expr))
+		v, err := get.Get(p, get.Expr(o.expr))
 		if err != nil {
 			return fmt.Errorf("failed to extract metadata from %q: %w", p, err)
 		}
