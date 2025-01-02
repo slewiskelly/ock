@@ -70,7 +70,7 @@ func (g *Get) execute(ctx context.Context, fs *flag.FlagSet, args ...interface{}
 	var opts []_get.Option
 
 	if g.expr != "" {
-		opts = append(opts, _get.WithExpr(g.expr))
+		opts = append(opts, _get.Expr(g.expr))
 	}
 
 	v, err := _get.Get(fs.Arg(0), opts...)
