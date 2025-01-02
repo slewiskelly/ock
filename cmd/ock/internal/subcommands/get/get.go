@@ -44,7 +44,7 @@ func (*Get) Usage() string {
 // SetFlags sets the flags specific to the subcommand.
 func (g *Get) SetFlags(f *flag.FlagSet) {
 	f.StringVar(&g.expr, "e", "", "expression to filter files")
-	f.StringVar(&g.format, "f", "summary", "display format (json | yaml)")
+	f.StringVar(&g.format, "f", "yaml", "display format (json | yaml)")
 	f.StringVar(&g.schema, "s", ".schemacue", "location of the schema file to validate against")
 }
 
@@ -86,7 +86,7 @@ func display(v *cue.Value, f string) error {
 	switch f {
 	case "json":
 		return displayJSON(v)
-	case "summary":
+	case "yaml":
 		return displayYAML(v)
 	default:
 		return errors.New("unknown output format")
