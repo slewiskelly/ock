@@ -66,7 +66,7 @@ func (l *List) execute(ctx context.Context, fs *flag.FlagSet, args ...interface{
 	var opts []_list.Option
 
 	if l.expr != "" {
-		opts = append(opts, _list.WithExpr(l.expr))
+		opts = append(opts, _list.Expr(l.expr))
 	}
 
 	f, err := _list.List(fs.Arg(0), opts...)

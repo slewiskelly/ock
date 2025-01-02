@@ -5,8 +5,8 @@ type Option interface {
 	apply(*options)
 }
 
-// WithExpr specifies an expression used to filter files.
-func WithExpr(e string) Option {
+// Expr specifies an expression used to filter files.
+func Expr(e string) Option {
 	return option(func(o *options) {
 		o.expr = e
 	})
