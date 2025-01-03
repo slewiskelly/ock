@@ -5,6 +5,7 @@ go 1.23.4
 require (
 	cuelang.org/go v0.11.1
 	github.com/google/subcommands v1.2.0
+	sigs.k8s.io/yaml v1.4.0
 )
 
 require (

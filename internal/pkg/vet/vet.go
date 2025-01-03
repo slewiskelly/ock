@@ -41,11 +41,11 @@ func Vet(path string, schema *cue.Value, opts ...Option) (*Report, error) {
 
 		// TODO(slewiskelly): Signals a lack of metadata, should be considered a
 		// failure?
-		if v == nil {
+		if len(v) < 1 {
 			return nil
 		}
 
-		if err := (*v).Unify(*schema).Validate(); err != nil {
+		if err := v[0].Metadata.Unify(*schema).Validate(); err != nil {
 			r.Files[p] = append(r.Files[p], errs(err)...)
 		}
 

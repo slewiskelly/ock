@@ -9,11 +9,11 @@ import (
 	"fmt"
 	"os"
 
-	"cuelang.org/go/cue"
-	"cuelang.org/go/encoding/yaml"
 	"github.com/google/subcommands"
+	"sigs.k8s.io/yaml"
 
 	_get "github.com/slewiskelly/ock/internal/pkg/get"
+	"github.com/slewiskelly/ock/internal/pkg/report"
 )
 
 // Get implements the "get" subcommand.
@@ -32,7 +32,7 @@ func (*Get) Name() string {
 
 // Synopsis returns a one-line summary of the subcommand.
 func (*Get) Synopsis() string {
-	return "displays the metadata of a given file"
+	return "displays the metadata of file(s) under a given path"
 }
 
 // Usage returns a longer explanation and/or usage example(s) of the subcommand.
@@ -73,28 +73,35 @@ func (g *Get) execute(ctx context.Context, fs *flag.FlagSet, args ...interface{}
 		opts = append(opts, _get.Expr(g.expr))
 	}
 
-	v, err := _get.Get(fs.Arg(0), opts...)
+	r, err := _get.Get(fs.Arg(0), opts...)
 	if err != nil {
 		return err
 	}
 
-	return display(v, g.format)
+	return display(r, g.format)
 
 }
 
-func display(v *cue.Value, f string) error {
+func display(r report.Report, f string) error {
 	switch f {
 	case "json":
-		return displayJSON(v)
+		return displayJSON(r)
 	case "yaml":
-		return displayYAML(v)
+		return displayYAML(r)
 	default:
 		return errors.New("unknown output format")
 	}
 }
 
-func displayJSON(v *cue.Value) error {
-	b, err := json.MarshalIndent(v, "", "  ")
+func displayJSON(r report.Report) error {
+	var b []byte
+	var err error
+
+	if len(r) == 1 {
+		b, err = json.MarshalIndent(r[0].Metadata, "", "  ")
+	} else {
+		b, err = json.MarshalIndent(r, "", "  ")
+	}
 	if err != nil {
 		return err
 	}
@@ -104,8 +111,15 @@ func displayJSON(v *cue.Value) error {
 	return nil
 }
 
-func displayYAML(v *cue.Value) error {
-	b, err := yaml.Encode(*v)
+func displayYAML(r report.Report) error {
+	var b []byte
+	var err error
+
+	if len(r) == 1 {
+		b, err = yaml.Marshal(r[0].Metadata)
+	} else {
+		b, err = yaml.Marshal(r)
+	}
 	if err != nil {
 		return err
 	}
