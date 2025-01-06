@@ -16,6 +16,7 @@ import (
 	"cuelang.org/go/cue/load"
 	"github.com/google/subcommands"
 
+	"github.com/slewiskelly/ock/internal/pkg/report"
 	_vet "github.com/slewiskelly/ock/internal/pkg/vet"
 )
 
@@ -79,14 +80,14 @@ func (v *Vet) execute(ctx context.Context, fs *flag.FlagSet, args ...interface{}
 		return err
 	}
 
-	if len(r.Files) < 1 {
+	if len(r) < 1 {
 		return nil
 	}
 
 	return display(r, v.format)
 }
 
-func display(r *_vet.Report, f string) error {
+func display(r report.Report, f string) error {
 	switch f {
 	case "json":
 		return displayJSON(r)
@@ -99,8 +100,8 @@ func display(r *_vet.Report, f string) error {
 	}
 }
 
-func displayJSON(r *_vet.Report) error {
-	b, err := json.MarshalIndent(r.Files, "", "  ")
+func displayJSON(r report.Report) error {
+	b, err := json.MarshalIndent(r, "", "  ")
 	if err != nil {
 		return err
 	}
@@ -110,14 +111,14 @@ func displayJSON(r *_vet.Report) error {
 	return nil
 }
 
-func displayReport(r *_vet.Report) error {
+func displayReport(r report.Report) error {
 	w := new(strings.Builder)
 	tw := tabwriter.NewWriter(w, 0, 8, 1, '\t', 0)
 
-	for f, e := range r.Files {
-		fmt.Fprintln(w, f)
+	for _, x := range r {
+		fmt.Fprintln(w, x.Name)
 
-		for _, err := range e {
+		for _, err := range x.Errors {
 			// TODO(slewiskelly): Display level, field, message.
 			fmt.Fprintf(tw, "\t%v\n", err)
 		}
@@ -130,16 +131,18 @@ func displayReport(r *_vet.Report) error {
 	return nil
 }
 
-func displaySummary(r *_vet.Report) error {
+func displaySummary(r report.Report) error {
 	w := new(strings.Builder)
 	tw := tabwriter.NewWriter(w, 0, 8, 1, '\t', 0)
 
 	fmt.Fprintln(tw, "File\tError")
-	fmt.Fprintln(tw, "----\t--------")
+	fmt.Fprintln(tw, "----\t-----")
 
-	for f, e := range r.Files {
-		// TODO(slewiskelly): Display file, number of warnings, number of errors
-		fmt.Fprintf(tw, "%s\t%v\n", f, e[0]) // Displays only the first error encountered.
+	for _, x := range r {
+		if len(x.Errors) > 0 {
+			// TODO(slewiskelly): Display file, number of warnings, number of errors
+			fmt.Fprintf(tw, "%s\t%v\n", x.Name, x.Errors[0]) // Displays only the first error encountered.
+		}
 	}
 
 	tw.Flush()

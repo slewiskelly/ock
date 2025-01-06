@@ -9,20 +9,21 @@ import (
 	"cuelang.org/go/cue/errors"
 
 	"github.com/slewiskelly/ock/internal/pkg/get"
+	"github.com/slewiskelly/ock/internal/pkg/report"
 )
 
 // Vet validates all files rooted at the given path, against the given schema.
 //
 // The returned report contains all files which failed validation, along with
 // their corresponding error(s).
-func Vet(path string, schema *cue.Value, opts ...Option) (*Report, error) {
+func Vet(path string, schema *cue.Value, opts ...Option) (report.Report, error) {
 	o := &options{}
 
 	for _, opt := range opts {
 		opt.apply(o)
 	}
 
-	r := &Report{Files: make(map[string][]string)}
+	var r report.Report
 
 	err := filepath.WalkDir(path, func(p string, d fs.DirEntry, err error) error {
 		if err != nil {
@@ -35,7 +36,7 @@ func Vet(path string, schema *cue.Value, opts ...Option) (*Report, error) {
 
 		v, err := get.Get(p)
 		if err != nil {
-			r.Files[p] = append(r.Files[p], err.Error())
+			r = append(r, &report.File{Name: p, Errors: []string{err.Error()}})
 			return nil
 		}
 
@@ -46,7 +47,7 @@ func Vet(path string, schema *cue.Value, opts ...Option) (*Report, error) {
 		}
 
 		if err := v[0].Metadata.Unify(*schema).Validate(); err != nil {
-			r.Files[p] = append(r.Files[p], errs(err)...)
+			r = append(r, &report.File{Name: p, Errors: errs(err)})
 		}
 
 		return nil
