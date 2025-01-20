@@ -2,11 +2,11 @@
 package vet
 
 import (
+	"fmt"
 	"io/fs"
 	"path/filepath"
 
 	"cuelang.org/go/cue"
-	"cuelang.org/go/cue/errors"
 
 	"github.com/slewiskelly/ock/internal/pkg/get"
 	"github.com/slewiskelly/ock/internal/pkg/report"
@@ -46,8 +46,8 @@ func Vet(path string, schema *cue.Value, opts ...Option) (report.Report, error) 
 			return nil
 		}
 
-		if err := v[0].Metadata.Unify(*schema).Validate(); err != nil {
-			r = append(r, &report.File{Name: p, Errors: errs(err)})
+		if errs := validate(v[0].Metadata.Unify(*schema)); len(errs) > 0 {
+			r = append(r, &report.File{Name: p, Errors: errs})
 		}
 
 		return nil
@@ -56,12 +56,26 @@ func Vet(path string, schema *cue.Value, opts ...Option) (report.Report, error) 
 	return r, err
 }
 
-func errs(err error) []string {
-	var s []string
+func validate(v cue.Value) []string {
+	var errs []string
 
-	for _, e := range errors.Errors(err) {
-		s = append(s, e.Error())
+	i, err := v.Fields()
+	if err != nil {
+		return []string{fmt.Sprintf("failed to validate: %v", err)} // TODO(slewiskelly): Reconsider.
 	}
 
-	return s
+	for i.Next() {
+		x := i.Value()
+
+		if err := x.Validate(); err != nil {
+			if a := x.Attribute("error"); a.NumArgs() > 0 {
+				errs = append(errs, fmt.Sprintf("%s: %s", x.Path(), a.Contents()))
+				continue
+			}
+
+			errs = append(errs, err.Error())
+		}
+	}
+
+	return errs
 }
