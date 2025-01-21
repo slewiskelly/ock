@@ -45,7 +45,7 @@ func (*Vet) Usage() string {
 
 // SetFlags sets the flags specific to the subcommand.
 func (v *Vet) SetFlags(f *flag.FlagSet) {
-	f.StringVar(&v.format, "f", "summary", "display format (json | report | summary)")
+	f.StringVar(&v.format, "f", "summary", "display format (json | summary)")
 	f.StringVar(&v.schema, "schema", ".schema.cue", "location of the schema file to validate against")
 }
 
@@ -91,8 +91,6 @@ func display(r report.Report, f string) error {
 	switch f {
 	case "json":
 		return displayJSON(r)
-	case "report":
-		return displayReport(r)
 	case "summary":
 		return displaySummary(r)
 	default:
@@ -111,37 +109,21 @@ func displayJSON(r report.Report) error {
 	return nil
 }
 
-func displayReport(r report.Report) error {
-	w := new(strings.Builder)
-	tw := tabwriter.NewWriter(w, 0, 8, 1, '\t', 0)
-
-	for _, x := range r {
-		fmt.Fprintln(w, x.Name)
-
-		for _, err := range x.Errors {
-			// TODO(slewiskelly): Display level, field, message.
-			fmt.Fprintf(tw, "\t%v\n", err)
-		}
-
-		tw.Flush()
-		fmt.Println(w.String())
-		w.Reset()
-	}
-
-	return nil
-}
-
 func displaySummary(r report.Report) error {
 	w := new(strings.Builder)
 	tw := tabwriter.NewWriter(w, 0, 8, 1, '\t', 0)
 
-	fmt.Fprintln(tw, "File\tError")
-	fmt.Fprintln(tw, "----\t-----")
+	fmt.Fprintln(tw, "File\tError(s)")
+	fmt.Fprintln(tw, "----\t--------")
 
 	for _, x := range r {
 		if len(x.Errors) > 0 {
 			// TODO(slewiskelly): Display file, number of warnings, number of errors
-			fmt.Fprintf(tw, "%s\t%v\n", x.Name, x.Errors[0]) // Displays only the first error encountered.
+			fmt.Fprintf(tw, "%s\t%v\n", x.Name, x.Errors[0])
+
+			for _, e := range x.Errors[1:] {
+				fmt.Fprintf(tw, "\t%v\n", e)
+			}
 		}
 	}
 
