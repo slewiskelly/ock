@@ -27,6 +27,14 @@ By default the definition used for validation is `#Metadata` within the
 
 See the usage section for initializing a default schema.
 
+## Installation
+
+### Go
+
+```shell
+go install github.com/slewiskelly/ock/cmd/ock@latest
+```
+
 ## Usage
 
 > [!TIP]
