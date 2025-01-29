@@ -16,12 +16,18 @@ import (
 //
 // The returned report contains all files which failed validation, along with
 // their corresponding error(s).
-func Vet(path string, schema *cue.Value, opts ...Option) (report.Report, error) {
+func Vet(path string, schema cue.Value, opts ...Option) (report.Report, error) {
 	o := &options{}
 
 	for _, opt := range opts {
 		opt.apply(o)
 	}
+
+	if err := schema.Err(); err != nil {
+		return nil, fmt.Errorf("invalid schema: %w", err)
+	}
+
+	schema = schema.LookupPath(cue.ParsePath("#Metadata"))
 
 	var r report.Report
 
@@ -46,7 +52,7 @@ func Vet(path string, schema *cue.Value, opts ...Option) (report.Report, error) 
 			return nil
 		}
 
-		if errs := validate(v[0].Metadata.Unify(*schema)); len(errs) > 0 {
+		if errs := validate(v[0].Metadata.Unify(schema)); len(errs) > 0 {
 			r = append(r, &report.File{Name: p, Errors: errs})
 		}
 

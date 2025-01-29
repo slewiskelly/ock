@@ -11,7 +11,6 @@ import (
 	"strings"
 	"text/tabwriter"
 
-	"cuelang.org/go/cue"
 	"cuelang.org/go/cue/cuecontext"
 	"cuelang.org/go/cue/load"
 	"github.com/google/subcommands"
@@ -73,9 +72,7 @@ func (v *Vet) execute(ctx context.Context, fs *flag.FlagSet, args ...interface{}
 		return err
 	}
 
-	x := cuecontext.New().BuildInstance(i).LookupPath(cue.ParsePath("#Metadata"))
-
-	r, err := _vet.Vet(fs.Arg(0), &x) // TODO(slewiskelly): Options.
+	r, err := _vet.Vet(fs.Arg(0), cuecontext.New().BuildInstance(i)) // TODO(slewiskelly): Options.
 	if err != nil {
 		return err
 	}
