@@ -73,6 +73,12 @@ func validate(v cue.Value) []string {
 	for i.Next() {
 		x := i.Value()
 
+		// Recursively check fields if there is a nested structure.
+		if _, err := x.Fields(); err == nil {
+			errs = append(errs, validate(x)...)
+			continue
+		}
+
 		if err := x.Validate(cue.Concrete(true)); err != nil {
 			if a := x.Attribute("error"); a.NumArgs() > 0 {
 				errs = append(errs, fmt.Sprintf("%s: %s", x.Path(), a.Contents()))
