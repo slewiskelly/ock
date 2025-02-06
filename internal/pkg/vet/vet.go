@@ -52,8 +52,8 @@ func Vet(path string, schema cue.Value, opts ...Option) (report.Report, error) {
 			return nil
 		}
 
-		if errs := validate(v[0].Metadata.Unify(schema)); len(errs) > 0 {
-			r = append(r, &report.File{Name: p, Errors: errs})
+		if errs, wrns := validate(v[0].Metadata.Unify(schema)); len(errs) > 0 || len(wrns) > 0 {
+			r = append(r, &report.File{Name: p, Errors: errs, Warnings: wrns})
 		}
 
 		return nil
@@ -62,12 +62,12 @@ func Vet(path string, schema cue.Value, opts ...Option) (report.Report, error) {
 	return r, err
 }
 
-func validate(v cue.Value) []string {
-	var errs []string
+func validate(v cue.Value) ([]string, []string) {
+	var errs, wrns []string
 
 	i, err := v.Fields()
 	if err != nil {
-		return []string{fmt.Sprintf("failed to validate: %v", err)} // TODO(slewiskelly): Reconsider.
+		return []string{fmt.Sprintf("failed to validate: %v", err)}, nil // TODO(slewiskelly): Reconsider.
 	}
 
 	for i.Next() {
@@ -75,7 +75,11 @@ func validate(v cue.Value) []string {
 
 		// Recursively check fields if there is a nested structure.
 		if _, err := x.Fields(); err == nil {
-			errs = append(errs, validate(x)...)
+			e, w := validate(x)
+
+			errs = append(errs, e...)
+			wrns = append(wrns, w...)
+
 			continue
 		}
 
@@ -85,9 +89,14 @@ func validate(v cue.Value) []string {
 				continue
 			}
 
+			if a := x.Attribute("warning"); a.NumArgs() > 0 {
+				wrns = append(wrns, fmt.Sprintf("%s: %s", x.Path(), a.Contents()))
+				continue
+			}
+
 			errs = append(errs, err.Error())
 		}
 	}
 
-	return errs
+	return errs, wrns
 }

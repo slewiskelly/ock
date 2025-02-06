@@ -110,22 +110,30 @@ func displaySummary(r report.Report) error {
 	w := new(strings.Builder)
 	tw := tabwriter.NewWriter(w, 0, 8, 1, '\t', 0)
 
-	fmt.Fprintln(tw, "File\tError(s)")
-	fmt.Fprintln(tw, "----\t--------")
+	var ec, wc int
 
 	for _, x := range r {
-		if len(x.Errors) > 0 {
-			// TODO(slewiskelly): Display file, number of warnings, number of errors
-			fmt.Fprintf(tw, "%s\t%v\n", x.Name, x.Errors[0])
+		if len(x.Errors) > 0 || len(x.Warnings) > 0 {
+			ec += len(x.Errors)
+			wc += len(x.Warnings)
 
-			for _, e := range x.Errors[1:] {
-				fmt.Fprintf(tw, "\t%v\n", e)
+			fmt.Fprintln(tw, x.Name)
+
+			for _, e := range x.Errors {
+				fmt.Fprintf(tw, "\033[38;2;255;0;0mERROR\033[0m\t%v\n", e)
 			}
+
+			for _, e := range x.Warnings {
+				fmt.Fprintf(tw, "\033[38;2;255;128;0mWARN\033[0m\t%v\n", e)
+			}
+
+			fmt.Fprintln(tw)
 		}
 	}
 
 	tw.Flush()
 	fmt.Println(w.String())
+	fmt.Printf("\033[38;2;255;0;0m%d errors\033[0m, \033[38;2;255;128;0m%d warnings\033[0m\n", ec, wc)
 
 	return nil
 }

@@ -1,7 +1,7 @@
 ---
 title: "Schema Reference"
 type: "reference"
-lastReviewed: "2025-01-28"
+lastReviewed: "2025-02-06"
 ---
 # Schema Reference
 
@@ -28,3 +28,11 @@ first navigating an error provided by CUE directly.
 The use of custom error messages is optional, if a field has no `@error`
 attribute, or is unpopulated, then the native error reported via CUE's
 validation will be presented.
+
+## Warnings
+
+Expressing warnings is identical to that of [errors](#errors), with the
+exception that the `@warning` attribute is used in place of `@error`.
+
+Note that if a field has neither an `@error` or `@warning` attribute, any
+validation error will be considered an error.

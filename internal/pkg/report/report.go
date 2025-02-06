@@ -13,4 +13,5 @@ type File struct {
 	Name     string    `json:"name,omitempty"`     // Name of the file.
 	Metadata cue.Value `json:"metadata,omitempty"` // File's metadata.
 	Errors   []string  `json:"errors,omitempty"`   // Any validation errors encountered.
+	Warnings []string  `json:"warnings,omitempty"` // Any validation warnings encountered.
 }
