@@ -5,7 +5,16 @@ type Option interface {
 	apply(*options)
 }
 
-type options struct{}
+// Level specifies the minimum level of validation errors to report on.
+func Level(l Lvl) Option {
+	return option(func(o *options) {
+		o.lvl = l
+	})
+}
+
+type options struct {
+	lvl Lvl
+}
 
 type option func(*options)
 

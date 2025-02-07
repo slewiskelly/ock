@@ -23,6 +23,7 @@ import (
 type Vet struct {
 	def    string
 	format string
+	lvl    string
 	schema string
 }
 
@@ -45,6 +46,7 @@ func (*Vet) Usage() string {
 // SetFlags sets the flags specific to the subcommand.
 func (v *Vet) SetFlags(f *flag.FlagSet) {
 	f.StringVar(&v.format, "f", "summary", "display format (json | summary)")
+	f.StringVar(&v.lvl, "l", "warn", "minimum error level to display (error | warn)")
 	f.StringVar(&v.schema, "schema", ".schema.cue", "location of the schema file to validate against")
 }
 
@@ -72,7 +74,7 @@ func (v *Vet) execute(ctx context.Context, fs *flag.FlagSet, args ...interface{}
 		return err
 	}
 
-	r, err := _vet.Vet(fs.Arg(0), cuecontext.New().BuildInstance(i)) // TODO(slewiskelly): Options.
+	r, err := _vet.Vet(fs.Arg(0), cuecontext.New().BuildInstance(i), _vet.Level(lvlFrom(v.lvl)))
 	if err != nil {
 		return err
 	}
@@ -136,4 +138,15 @@ func displaySummary(r report.Report) error {
 	fmt.Printf("\033[38;2;255;0;0m%d errors\033[0m, \033[38;2;255;128;0m%d warnings\033[0m\n", ec, wc)
 
 	return nil
+}
+
+func lvlFrom(s string) _vet.Lvl {
+	switch strings.ToLower(s) {
+	case "err", "error":
+		return _vet.LvlError
+	case "warn", "warning":
+		fallthrough
+	default:
+		return _vet.LvlWarn
+	}
 }
