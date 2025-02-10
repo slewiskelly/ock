@@ -23,6 +23,7 @@ import (
 type Vet struct {
 	def    string
 	format string
+	glob   string
 	lvl    string
 	schema string
 }
@@ -47,6 +48,7 @@ func (*Vet) Usage() string {
 func (v *Vet) SetFlags(f *flag.FlagSet) {
 	f.StringVar(&v.format, "f", "summary", "display format (json | summary)")
 	f.StringVar(&v.lvl, "l", "warn", "minimum error level to display (error | warn)")
+	f.StringVar(&v.glob, "glob", "", "pattern to filter files")
 	f.StringVar(&v.schema, "schema", ".schema.cue", "location of the schema file to validate against")
 }
 
@@ -74,7 +76,7 @@ func (v *Vet) execute(ctx context.Context, fs *flag.FlagSet, args ...interface{}
 		return err
 	}
 
-	r, err := _vet.Vet(fs.Arg(0), cuecontext.New().BuildInstance(i), _vet.Level(lvlFrom(v.lvl)))
+	r, err := _vet.Vet(fs.Arg(0), cuecontext.New().BuildInstance(i), _vet.Glob(v.glob), _vet.Level(lvlFrom(v.lvl)))
 	if err != nil {
 		return err
 	}

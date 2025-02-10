@@ -5,6 +5,13 @@ type Option interface {
 	apply(*options)
 }
 
+// Glob specifies a pattern to filter files that are attempted to be validated.
+func Glob(pattern string) Option {
+	return option(func(o *options) {
+		o.glob = pattern
+	})
+}
+
 // Level specifies the minimum level of validation errors to report on.
 func Level(l Lvl) Option {
 	return option(func(o *options) {
@@ -13,7 +20,8 @@ func Level(l Lvl) Option {
 }
 
 type options struct {
-	lvl Lvl
+	glob string
+	lvl  Lvl
 }
 
 type option func(*options)

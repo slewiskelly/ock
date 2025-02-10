@@ -2,11 +2,13 @@
 package vet
 
 import (
+	"errors"
 	"fmt"
 	"io/fs"
 	"path/filepath"
 
 	"cuelang.org/go/cue"
+	"github.com/bmatcuk/doublestar/v4"
 
 	"github.com/slewiskelly/ock/internal/pkg/get"
 	"github.com/slewiskelly/ock/internal/pkg/report"
@@ -33,6 +35,10 @@ func Vet(path string, schema cue.Value, opts ...Option) (report.Report, error) {
 		opt.apply(o)
 	}
 
+	if ok := doublestar.ValidatePathPattern(o.glob); !ok {
+		return nil, errors.New("invalid globbing pattern")
+	}
+
 	if err := schema.Err(); err != nil {
 		return nil, fmt.Errorf("invalid schema: %w", err)
 	}
@@ -44,6 +50,10 @@ func Vet(path string, schema cue.Value, opts ...Option) (report.Report, error) {
 	err := filepath.WalkDir(path, func(p string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return err
+		}
+
+		if o.glob != "" && !doublestar.PathMatchUnvalidated(o.glob, p) {
+			return nil
 		}
 
 		if !d.Type().IsRegular() || filepath.Ext(p) != ".md" {
