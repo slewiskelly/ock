@@ -1,0 +1,23 @@
+version: 2
+project_name: ock
+archives:
+  - format_overrides:
+      - goos: windows
+        formats:
+          - zip
+brews:
+  - repository:
+      owner: slewiskelly
+      name: ock
+    directory: Formula
+    homepage: https://github.com/slewiskelly/ock
+    description: A tool for querying and validating document metadata.
+    test: |
+      ock version
+builds:
+  - binary: ock
+    main: ./cmd/ock
+    env:
+      - CGO_ENABLED=0
+checksum:
+  name_template: checksums.txt
