@@ -62,7 +62,7 @@ func Vet(path string, schema cue.Value, opts ...Option) (report.Report, error) {
 
 		v, err := get.Get(p)
 		if err != nil {
-			r = append(r, &report.File{Name: p, Errors: []string{err.Error()}})
+			r = append(r, &report.File{Name: p, Errors: []report.Error{{Message: err.Error()}}})
 			return nil
 		}
 
@@ -82,12 +82,10 @@ func Vet(path string, schema cue.Value, opts ...Option) (report.Report, error) {
 	return r, err
 }
 
-func validate(v cue.Value, lvl Lvl) ([]string, []string) {
-	var errs, wrns []string
-
+func validate(v cue.Value, lvl Lvl) (errs, wrns []report.Error) {
 	i, err := v.Fields()
 	if err != nil {
-		return []string{fmt.Sprintf("failed to validate: %v", err)}, nil // TODO(slewiskelly): Reconsider.
+		return []report.Error{{Message: fmt.Sprintf("Failed to validate: %v", err)}}, nil // TODO(slewiskelly): Reconsider.
 	}
 
 	for i.Next() {
@@ -106,19 +104,28 @@ func validate(v cue.Value, lvl Lvl) ([]string, []string) {
 		if err := x.Validate(cue.Concrete(true)); err != nil {
 			if a := x.Attribute("error"); a.NumArgs() > 0 {
 				if lvl <= LvlError {
-					errs = append(errs, fmt.Sprintf("%s: %s", x.Path(), a.Contents()))
+					errs = append(errs, report.Error{
+						Field:   x.Path().String(),
+						Message: a.Contents(),
+					})
 				}
 				continue
 			}
 
 			if a := x.Attribute("warning"); a.NumArgs() > 0 {
 				if lvl <= LvlWarn {
-					wrns = append(wrns, fmt.Sprintf("%s: %s", x.Path(), a.Contents()))
+					wrns = append(wrns, report.Error{
+						Field:   x.Path().String(),
+						Message: a.Contents(),
+					})
 				}
 				continue
 			}
 
-			errs = append(errs, err.Error())
+			errs = append(errs, report.Error{
+				Field:   x.Path().String(),
+				Message: err.Error(),
+			})
 		}
 	}
 

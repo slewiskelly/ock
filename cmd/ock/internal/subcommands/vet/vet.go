@@ -124,11 +124,11 @@ func displaySummary(r report.Report) error {
 			fmt.Fprintln(tw, x.Name)
 
 			for _, e := range x.Errors {
-				fmt.Fprintf(tw, "\033[38;2;255;0;0mERROR\033[0m\t%v\n", e)
+				fmt.Fprintf(tw, "\033[38;2;255;0;0mERROR\033[0m\t%s\t%s\n", e.Field, e.Message)
 			}
 
 			for _, e := range x.Warnings {
-				fmt.Fprintf(tw, "\033[38;2;255;128;0mWARN\033[0m\t%v\n", e)
+				fmt.Fprintf(tw, "\033[38;2;255;128;0mWARN\033[0m\t%s\t%s\n", e.Field, e.Message)
 			}
 
 			fmt.Fprintln(tw)

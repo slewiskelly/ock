@@ -12,6 +12,11 @@ type Report []*File
 type File struct {
 	Name     string    `json:"name,omitempty"`     // Name of the file.
 	Metadata cue.Value `json:"metadata,omitempty"` // File's metadata.
-	Errors   []string  `json:"errors,omitempty"`   // Any validation errors encountered.
-	Warnings []string  `json:"warnings,omitempty"` // Any validation warnings encountered.
+	Errors   []Error   `json:"errors,omitempty"`   // Any validation errors encountered.
+	Warnings []Error   `json:"warnings,omitempty"` // Any validation warnings encountered.
+}
+
+type Error struct {
+	Field   string `json:"field,omitempty"`   // Field containing a validaion error.
+	Message string `json:"message,omitempty"` // Validation error.
 }
