@@ -11,7 +11,7 @@ type Report []*File
 // File represents an individual file.
 type File struct {
 	Name     string    `json:"name,omitempty"`     // Name of the file.
-	Metadata cue.Value `json:"metadata,omitempty"` // File's metadata.
+	Metadata cue.Value `json:"metadata,omitzero"`  // File's metadata.
 	Errors   []Error   `json:"errors,omitempty"`   // Any validation errors encountered.
 	Warnings []Error   `json:"warnings,omitempty"` // Any validation warnings encountered.
 }
