@@ -5,6 +5,8 @@ FROM golang:${GOVERSION}-alpine AS builder
 ENV GOCACHE=/root/.cache/go-build
 ENV GOMODCACHE=/go/pkg/mod
 
+WORKDIR /src
+
 RUN apk --no-cache add git
 
 COPY ./go.* ./
