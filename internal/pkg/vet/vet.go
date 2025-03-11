@@ -2,12 +2,13 @@
 package vet
 
 import (
-	"errors"
 	"fmt"
 	"io/fs"
 	"path/filepath"
+	"strings"
 
 	"cuelang.org/go/cue"
+	"cuelang.org/go/cue/errors"
 	"github.com/bmatcuk/doublestar/v4"
 
 	"github.com/slewiskelly/ock/internal/pkg/get"
@@ -124,10 +125,28 @@ func validate(v cue.Value, lvl Lvl) (errs, wrns []report.Error) {
 
 			errs = append(errs, report.Error{
 				Field:   x.Path().String(),
-				Message: err.Error(),
+				Message: errDetails(err).Error(),
 			})
 		}
 	}
 
 	return errs, wrns
+}
+
+func errDetails(e error) error {
+	qe, ok := e.(errors.Error)
+	if !ok {
+		return e
+	}
+
+	var msgs []string
+
+	qe = errors.Sanitize(qe)
+
+	for _, err := range errors.Errors(qe) {
+		f, a := err.Msg()
+		msgs = append(msgs, fmt.Sprintf(f, a...))
+	}
+
+	return errors.New(strings.Join(msgs, "\n"))
 }
