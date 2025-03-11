@@ -1,9 +1,27 @@
 ---
 title: "Schema Reference"
 type: "reference"
-lastReviewed: "2025-02-06"
+lastReviewed: "2025-03-12"
 ---
 # Schema Reference
+
+The `#Metadata` [definition](https://cuelang.org/docs/reference/spec/#definitions-and-hidden-fields)
+is required in order to validate document metadata.
+
+The `#Metadata` definition should contain a field for each field present in
+document metadata, with each field having the appropriate constraints.
+
+All other definition(s) and data are ignored, but may be utilized by `#Metadata`
+to express a useful schema.
+
+See [cuelang.org](https://cuelang.org/) for more information on authoring CUE.
+
+> [!NOTE]
+> By default, definitions are closed, meaning fields that are not present in
+> the `#Metadata` definition, but are present in a document's metadata, are not
+> allowed.
+>
+> Definitions can be left open by using `...` to accomodate additional fields.
 
 ## Errors
 
