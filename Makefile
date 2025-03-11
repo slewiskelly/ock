@@ -4,8 +4,8 @@ GOVERSION ?= $(shell go list -m -f '{{.GoVersion}}')
 build: clean
 	@CGO_ENABLED=0 go build -o ./bin/ ./cmd/*
 
-.PHONY: build/container
-build/container:
+.PHONY: build/image
+build/image:
 	@docker buildx build . -t slewiskelly/ock --build-arg GOVERSION=$(GOVERSION)
 
 .PHONY: clean
