@@ -3,6 +3,7 @@ package get
 
 import (
 	"bufio"
+	"bytes"
 	"fmt"
 	"io/fs"
 	"os"
@@ -33,38 +34,9 @@ func Get(path string, opts ...Option) (report.Report, error) {
 			return nil
 		}
 
-		var b []byte
-
-		f, err := os.Open(p)
-		if err != nil {
+		b, err := frontmatter(p)
+		if err != nil || b == nil {
 			return err
-		}
-		defer f.Close()
-
-		s := bufio.NewScanner(f)
-
-		var closed bool
-
-		for i := 0; s.Scan(); i++ {
-			l := s.Bytes()
-
-			if i == 0 {
-				if string(l) != "---" {
-					return nil
-				}
-				continue
-			}
-
-			if i > 0 && string(l) == "---" {
-				closed = true
-				break
-			}
-
-			b = append(b, append(l, '\n')...)
-		}
-
-		if !closed {
-			return fmt.Errorf("%s: frontmatter not closed", p)
 		}
 
 		y, err := yaml.Extract(path, b)
@@ -95,4 +67,54 @@ func Get(path string, opts ...Option) (report.Report, error) {
 	// TODO(slewiskelly): Support filtering via expression.
 
 	return r, nil
+}
+
+func frontmatter(p string) ([]byte, error) {
+	f, err := os.Open(p)
+	if err != nil {
+		return nil, err
+	}
+	defer f.Close()
+
+	s := bufio.NewScanner(f)
+
+	var opened, closed int
+
+	for i := 1; s.Scan(); i++ {
+		l := s.Bytes()
+
+		if len(bytes.TrimSpace(l)) == 0 {
+			continue
+		}
+
+		if string(l) != "---" {
+			return nil, nil
+		}
+
+		opened = i
+		break
+	}
+
+	if opened == 0 {
+		return nil, nil
+	}
+
+	var b []byte
+
+	for i := opened + 1; s.Scan(); i++ {
+		l := s.Bytes()
+
+		if string(l) == "---" {
+			closed = i
+			break
+		}
+
+		b = append(b, append(l, '\n')...)
+	}
+
+	if closed <= opened {
+		return nil, fmt.Errorf("%s: frontmatter not closed", p)
+	}
+
+	return b, nil
 }
