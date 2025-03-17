@@ -61,6 +61,8 @@ func Vet(path string, schema cue.Value, opts ...Option) (report.Report, error) {
 			return nil
 		}
 
+		// TODO(slewiskelly): Refactor.
+
 		v, err := get.Get(p)
 		if err != nil {
 			r = append(r, &report.File{Name: p, Errors: []report.Error{{Message: err.Error()}}})
@@ -74,7 +76,7 @@ func Vet(path string, schema cue.Value, opts ...Option) (report.Report, error) {
 		}
 
 		if errs, wrns := validate(v[0].Metadata.Unify(schema), o.lvl); len(errs) > 0 || len(wrns) > 0 {
-			r = append(r, &report.File{Name: p, Errors: errs, Warnings: wrns})
+			r = append(r, &report.File{Name: p, Start: v[0].Start, End: v[0].End, Errors: errs, Warnings: wrns})
 		}
 
 		return nil

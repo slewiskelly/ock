@@ -12,6 +12,8 @@ type Report []*File
 type File struct {
 	Name     string    `json:"name,omitempty"`     // Name of the file.
 	Metadata cue.Value `json:"metadata,omitzero"`  // File's metadata.
+	Start    int       `json:"start"`              // Line number after the opening delimiter.
+	End      int       `json:"end"`                // Line number before the closing delimiter.
 	Errors   []Error   `json:"errors,omitempty"`   // Any validation errors encountered.
 	Warnings []Error   `json:"warnings,omitempty"` // Any validation warnings encountered.
 }

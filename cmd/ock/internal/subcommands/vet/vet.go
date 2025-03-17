@@ -121,7 +121,7 @@ func displaySummary(r report.Report) error {
 			ec += len(x.Errors)
 			wc += len(x.Warnings)
 
-			fmt.Fprintln(tw, x.Name)
+			fmt.Fprintf(tw, "%s (%d-%d)\n", x.Name, x.Start, x.End)
 
 			for _, e := range x.Errors {
 				fmt.Fprintf(tw, "\033[38;2;255;0;0mERROR\033[0m\t%s\t%s\n", e.Field, e.Message)
