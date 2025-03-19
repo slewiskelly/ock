@@ -1,0 +1,25 @@
+name: ock/vet
+description: Validates document metadata according to a defined schema
+inputs:
+  format:
+    default: summary
+  glob:
+    default: '**/*.md'
+  level:
+    default: error
+  path:
+    default: .
+  schema:
+    default: .schema.cue
+  version:
+    default: latest
+runs:
+  # TODO(slewiskelly): Report results to GitHub checks.
+  using: composite
+  steps:
+    - name: Setup ock
+      uses: slewiskelly/ock/.github/actions/setup-ock@main
+      with:
+        version: ${{ inputs.version }}
+    - name: Vet
+      run: ock vet -f=${{ inputs.format }} -glob=${{ inputs.glob}} -l=${{ inputs.level }} -schema=${{ inputs.schema}} ${{ inputs.path }}
