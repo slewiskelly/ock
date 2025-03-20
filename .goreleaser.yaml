@@ -8,7 +8,7 @@ archives:
 brews:
   - repository:
       owner: slewiskelly
-      name: ock
+      name: homebrew-tap
     directory: Formula
     homepage: https://github.com/slewiskelly/ock
     description: A tool for querying and validating document metadata.
