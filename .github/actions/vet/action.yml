@@ -23,3 +23,4 @@ runs:
         version: ${{ inputs.version }}
     - name: Vet
       run: ock vet -f=${{ inputs.format }} -glob=${{ inputs.glob}} -l=${{ inputs.level }} -schema=${{ inputs.schema}} ${{ inputs.path }}
+      shell: bash
