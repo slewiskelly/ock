@@ -81,7 +81,9 @@ import "time"
 #Owner: string
 ```
 
-This schema can be changed according to specific needs.
+This schema can be changed according to specific needs. See the
+[schema reference](./docs/references/schema.md) for information on how to define
+a schema.
 
 > [!NOTE]
 > The `#Metadata` definition is (___always___) used to validate files against.
