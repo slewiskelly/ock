@@ -4,7 +4,8 @@ on:
     tags:
       - v*
 jobs:
-  image:
+  release:
+    name: Release
     runs-on: ubuntu-latest
     permissions:
       contents: write
