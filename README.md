@@ -29,10 +29,22 @@ See the usage section for initializing a default schema.
 
 ## Installation
 
+### Docker
+
+```shell
+docker pull ghcr.io/slewiskelly/ock:latest
+```
+
 ### Go
 
 ```shell
 go install github.com/slewiskelly/ock/cmd/ock@latest
+```
+
+### Homebrew
+
+```shell
+brew install slewiskelly/tap/ock
 ```
 
 ## Usage
