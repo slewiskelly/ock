@@ -9,6 +9,7 @@ env:
   IMAGE: ${{ github.repository }}
 jobs:
   image:
+    name: Image
     runs-on: ubuntu-latest
     permissions:
       attestations: write
