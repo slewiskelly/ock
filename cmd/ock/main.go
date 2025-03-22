@@ -10,6 +10,7 @@ import (
 	"github.com/slewiskelly/ock/cmd/ock/internal/subcommands/get"
 	ini "github.com/slewiskelly/ock/cmd/ock/internal/subcommands/init"
 	"github.com/slewiskelly/ock/cmd/ock/internal/subcommands/list"
+	"github.com/slewiskelly/ock/cmd/ock/internal/subcommands/version"
 	"github.com/slewiskelly/ock/cmd/ock/internal/subcommands/vet"
 )
 
@@ -17,6 +18,7 @@ func init() {
 	subcommands.Register(&get.Get{}, "")
 	subcommands.Register(&ini.Init{}, "")
 	subcommands.Register(&list.List{}, "")
+	subcommands.Register(&version.Version{}, "")
 	subcommands.Register(&vet.Vet{}, "")
 
 	subcommands.Register(subcommands.HelpCommand(), "")
