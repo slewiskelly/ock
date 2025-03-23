@@ -10,7 +10,7 @@ build/image:
 
 .PHONY: clean
 clean:
-	@rm -rf ./bin
+	@rm -rf ./bin ./dist
 
 .PHONY: test
 test:
