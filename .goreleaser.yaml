@@ -21,3 +21,5 @@ builds:
       - CGO_ENABLED=0
 checksum:
   name_template: checksums.txt
+gomod:
+  proxy: true
