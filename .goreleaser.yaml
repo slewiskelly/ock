@@ -19,6 +19,10 @@ builds:
     main: ./cmd/ock
     env:
       - CGO_ENABLED=0
+changelog:
+  include:
+    - "^cmd:"
+    - "^internal:"
 checksum:
   name_template: checksums.txt
 gomod:
