@@ -1,17 +1,17 @@
 ---
-title: "Schema Reference"
+title: "Schema reference"
 type: "reference"
 lastReviewed: "2025-03-12"
 ---
-# Schema Reference
+# Schema reference
 
 The `#Metadata` [definition](https://cuelang.org/docs/reference/spec/#definitions-and-hidden-fields)
-is required in order to validate document metadata.
+is required to validate document metadata.
 
 The `#Metadata` definition should contain a field for each field present in
 document metadata, with each field having the appropriate constraints.
 
-All other definition(s) and data are ignored, but may be utilized by `#Metadata`
+All other definitions and data is ignored, but may be utilized by `#Metadata`
 to express a useful schema.
 
 See [cuelang.org](https://cuelang.org/) for more information on authoring CUE.
@@ -21,7 +21,7 @@ See [cuelang.org](https://cuelang.org/) for more information on authoring CUE.
 > the `#Metadata` definition, but are present in a document's metadata, are not
 > allowed.
 >
-> Definitions can be left open by using `...` to accomodate additional fields.
+> Definitions can be left open by using `...` to accommodate additional fields.
 
 ## Errors
 
@@ -39,13 +39,13 @@ Custom error messages can be added to fields of a schema by using the `@error`
 ```
 
 The rationale behind this is that the errors reported by CUE can sometimes be
-verbose, leading to some confusion as to how to resolve. A succint error message
-may prove useful in helping an author update a page's metadata more easily than
-first navigating an error provided by CUE directly.
+verbose, leading to some confusion as to how to resolve. A succinct error
+message may prove useful in helping an author update a page's metadata more
+easily than first navigating an error provided by CUE directly.
 
 The use of custom error messages is optional, if a field has no `@error`
 attribute, or is unpopulated, then the native error reported via CUE's
-validation will be presented.
+validation is presented.
 
 ## Warnings
 
@@ -53,4 +53,4 @@ Expressing warnings is identical to that of [errors](#errors), with the
 exception that the `@warning` attribute is used in place of `@error`.
 
 Note that if a field has neither an `@error` or `@warning` attribute, any
-validation error will be considered an error.
+validation error is considered an `ERROR`.
