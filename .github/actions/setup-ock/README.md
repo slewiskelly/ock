@@ -17,4 +17,4 @@ steps:
 
 | Input     | Required? | Default  | Description                                                                                                                  |
 |-----------|-----------|----------|------------------------------------------------------------------------------------------------------------------------------|
-| `version` | No        | `latest` | Version of `ock` to be installed; can be either: a semantic version (e.g. `v0`, `v0.1.0`), branch (e.g. `main`), or `latest` |
+| `version` | No        | `latest` | Version of `ock` to be installed; can be either: a semantic version (`v0`, `v0.1.0`), branch (`main`), or `latest`           |
