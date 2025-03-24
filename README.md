@@ -104,7 +104,7 @@ ock list [flags] <path>
 
 ### Validation
 
-To validate file(s), rooted at the given path, against the schema:
+To validate files, rooted at the given path, against the schema:
 
 ```shell
 ock vet [flags] <path>
