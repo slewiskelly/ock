@@ -46,7 +46,7 @@ jobs:
           tags: ${{ steps.metadata.outputs.tags }}
           labels: ${{ steps.metadata.outputs.labels }}
       - name: Attest
-        uses: actions/attest-build-provenance@v2
+        uses: actions/attest-build-provenance@v3
         with:
           push-to-registry: true
           subject-digest: ${{ steps.build-and-push.outputs.digest }}
