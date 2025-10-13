@@ -3,7 +3,7 @@ module github.com/slewiskelly/ock
 go 1.23.4
 
 require (
-	cuelang.org/go v0.14.1
+	cuelang.org/go v0.14.2
 	github.com/bmatcuk/doublestar/v4 v4.9.1
 	github.com/google/subcommands v1.2.0
 	sigs.k8s.io/yaml v1.6.0
@@ -21,9 +21,9 @@ require (
 	github.com/protocolbuffers/txtpbfmt v0.0.0-20250627152318-f293424e46b5 // indirect
 	github.com/rogpeppe/go-internal v1.14.1 // indirect
 	go.yaml.in/yaml/v2 v2.4.2 // indirect
-	golang.org/x/net v0.42.0 // indirect
+	golang.org/x/net v0.43.0 // indirect
 	golang.org/x/oauth2 v0.30.0 // indirect
 	golang.org/x/sync v0.16.0 // indirect
-	golang.org/x/text v0.27.0 // indirect
+	golang.org/x/text v0.28.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
