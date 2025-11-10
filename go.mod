@@ -1,16 +1,16 @@
 module github.com/slewiskelly/ock
 
-go 1.23.4
+go 1.24.0
 
 require (
-	cuelang.org/go v0.14.2
+	cuelang.org/go v0.15.0
 	github.com/bmatcuk/doublestar/v4 v4.9.1
 	github.com/google/subcommands v1.2.0
 	sigs.k8s.io/yaml v1.6.0
 )
 
 require (
-	cuelabs.dev/go/oci/ociregistry v0.0.0-20250715075730-49cab49c8e9d // indirect
+	cuelabs.dev/go/oci/ociregistry v0.0.0-20250722084951-074d06050084 // indirect
 	github.com/cockroachdb/apd/v3 v3.2.1 // indirect
 	github.com/emicklei/proto v1.14.2 // indirect
 	github.com/google/uuid v1.6.0 // indirect
@@ -18,12 +18,13 @@ require (
 	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/opencontainers/image-spec v1.1.1 // indirect
 	github.com/pelletier/go-toml/v2 v2.2.4 // indirect
-	github.com/protocolbuffers/txtpbfmt v0.0.0-20250627152318-f293424e46b5 // indirect
+	github.com/protocolbuffers/txtpbfmt v0.0.0-20251016062345-16587c79cd91 // indirect
 	github.com/rogpeppe/go-internal v1.14.1 // indirect
 	go.yaml.in/yaml/v2 v2.4.2 // indirect
-	golang.org/x/net v0.43.0 // indirect
-	golang.org/x/oauth2 v0.30.0 // indirect
-	golang.org/x/sync v0.16.0 // indirect
-	golang.org/x/text v0.28.0 // indirect
-	gopkg.in/yaml.v3 v3.0.1 // indirect
+	go.yaml.in/yaml/v3 v3.0.4 // indirect
+	golang.org/x/net v0.46.0 // indirect
+	golang.org/x/oauth2 v0.32.0 // indirect
+	golang.org/x/sync v0.17.0 // indirect
+	golang.org/x/text v0.30.0 // indirect
+	google.golang.org/protobuf v1.33.0 // indirect
 )
