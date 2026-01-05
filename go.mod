@@ -3,7 +3,7 @@ module github.com/slewiskelly/ock
 go 1.24.0
 
 require (
-	cuelang.org/go v0.15.1
+	cuelang.org/go v0.15.3
 	github.com/bmatcuk/doublestar/v4 v4.9.1
 	github.com/google/subcommands v1.2.0
 	sigs.k8s.io/yaml v1.6.0
